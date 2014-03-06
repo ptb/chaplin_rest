@@ -1,0 +1,13 @@
+%h1 Editing user
+%form.edit_user
+  %div.field
+    %label(for='user_first_name') First name
+    %input#user_first_name.first_name(name='user[first_name]' type='text')
+  %div.field
+    %label(for='user_last_name') Last name
+    %input#user_last_name.last_name(name='user[last_name]' type='text')
+  %div.actions
+    %input(name='commit' type='submit' value='Save')
+%a(href="/users/#{@id}") Show
+|
+%a(href="/users") Back

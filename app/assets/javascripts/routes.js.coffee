@@ -1,27 +1,27 @@
-define [''], ->
+define ['users/users_controller'], ->
   'use strict'
 
   (match) ->
-    # match '',
-    #   action: 'list'
-    #   controller: ''
-    #   name: '@list'
+    match 'users',
+      action: 'list'
+      controller: 'users/users'
+      name: 'users@list'
 
-    # match 'new',
-    #   action: 'new'
-    #   controller: ''
-    #   name: '@new'
+    match 'users/new',
+      action: 'new'
+      controller: 'users/users'
+      name: 'users@new'
 
-    # match ':id',
-    #   action: 'show'
-    #   controller: ''
-    #   constraints:
-    #     id: /^d+$/
-    #   name: '@show'
+    match 'users/:id',
+      action: 'show'
+      controller: 'users/users'
+      constraints:
+        id: /^\d+$/
+      name: 'users@show'
 
-    # match ':id/edit',
-    #   action: 'edit'
-    #   controller: ''
-    #   constraints:
-    #     id: /^d+$/
-    #   name: '@edit'
+    match 'users/:id/edit',
+      action: 'edit'
+      controller: 'users/users'
+      constraints:
+        id: /^\d+$/
+      name: 'users@edit'

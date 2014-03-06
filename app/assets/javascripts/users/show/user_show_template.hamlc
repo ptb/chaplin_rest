@@ -1,0 +1,10 @@
+%p#notice
+%p
+  %strong First name:
+  %span.first_name
+%p
+  %strong Last name:
+  %span.last_name
+%a(href="/users/#{@id}/edit") Edit
+|
+%a(href="/users") Back

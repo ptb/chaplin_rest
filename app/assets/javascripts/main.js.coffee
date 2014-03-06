@@ -6,6 +6,6 @@ require ['_base/base_application', 'routes'], (Application, routes) ->
 
   new Application
     controllerPath: ''
-    pushState: false
+    # pushState: false
     routes: routes
     title: ''
