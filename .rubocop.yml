@@ -1,0 +1,15 @@
+AllCops:
+  Includes:
+    - Rakefile
+    - config.ru
+  Excludes:
+    - bin/**
+    - db/**
+    - config/**
+    - log/**
+    - public/**
+    - tmp/**
+    - vendor/**
+
+Documentation:
+  Enabled: false
