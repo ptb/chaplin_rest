@@ -11,32 +11,23 @@ define [
   class UsersController extends Controller
     beforeAction: (params, route) ->
       @reuse('users', Users)
-
-      collection = @reuse('users')
-      collection.fetch() if collection.length is 0
+      @reuse('users').fetch() if @reuse('users').length is 0
 
     list: (params) ->
-      collection = @reuse('users')
       @view = new UsersListView
-        collection: collection
+        collection: @reuse('users')
 
     show: (params) ->
-      collection = @reuse('users')
-      model = collection.get(params.id)
       @view = new UserShowView
-        collection: collection
-        model: model
+        collection: @reuse('users')
+        model: @reuse('users').get(params.id)
 
     new: (params) ->
-      collection = @reuse('users')
-      model = new User()
       @view = new UserEditView
-        collection: collection
-        model: model
+        collection: @reuse('users')
+        model: new User()
 
     edit: (params) ->
-      collection = @reuse('users')
-      model = collection.get(params.id)
       @view = new UserEditView
-        collection: collection
-        model: model
+        collection: @reuse('users')
+        model: @reuse('users').get(params.id)
