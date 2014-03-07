@@ -16,6 +16,6 @@ define [
       event.preventDefault()
 
       @model.save()
-      @collection.fetch()
+      @collection.reset()
 
       Chaplin.utils.redirectTo 'users@list'
