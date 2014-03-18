@@ -1,5 +1,7 @@
 # encoding: UTF-8
 ChaplinRest::Application.routes.draw do
+  resources :developers
+
   scope :api do
     resources :users
   end
