@@ -1,0 +1,10 @@
+%h1 Editing developer
+%form.edit_developer
+  %div.field
+    %label(for='developer_name') Name
+    %input#developer_name.name(name='developer[name]' type='text')
+  %div.actions
+    %input(name='commit' type='submit' value='Save')
+%a(href="/developers/#{@id}") Show
+|
+%a(href="/developers") Back

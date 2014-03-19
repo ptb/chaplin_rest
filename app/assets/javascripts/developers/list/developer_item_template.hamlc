@@ -1,0 +1,7 @@
+%td.name
+%td
+  %a(href="/developers/#{@id}") Show
+%td
+  %a(href="/developers/#{@id}/edit") Edit
+%td
+  %a.js-destroy(href='#') Destroy

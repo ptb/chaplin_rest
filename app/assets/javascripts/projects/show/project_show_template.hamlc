@@ -1,0 +1,12 @@
+%p#notice
+%p
+  %strong Name:
+  %span.name
+- if @developers
+  %ul
+    - for developer in @developers.models
+      %li
+        %a(href="/developers/#{developer.id}") = developer.get 'name'
+%a(href="/projects/#{@id}/edit") Edit
+|
+%a(href="/projects") Back

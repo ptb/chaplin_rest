@@ -1,0 +1,11 @@
+%h1 Listing developers
+%table
+  %thead
+    %tr
+      %th Name
+      %th
+      %th
+      %th
+  %tbody
+%br
+%a(href='/developers/new') New Developer

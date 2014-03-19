@@ -1,0 +1,11 @@
+%h1 Listing projects
+%table
+  %thead
+    %tr
+      %th Name
+      %th
+      %th
+      %th
+  %tbody
+%br
+%a(href='/projects/new') New Project
