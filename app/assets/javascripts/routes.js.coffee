@@ -1,4 +1,8 @@
-define ['users/users_controller'], ->
+define [
+  'developers/developers_controller'
+  'projects/projects_controller'
+  'users/users_controller'
+  ], ->
   'use strict'
 
   (match) ->
