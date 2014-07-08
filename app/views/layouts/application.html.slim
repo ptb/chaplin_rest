@@ -4,12 +4,18 @@ html.no-js(lang='en' xml:lang='en' xmlns='http://www.w3.org/1999/xhtml')
     meta(charset='UTF-8')
     title Chaplin REST Example
     meta(content='initial-scale=1, width=device-width' name='viewport')
-    // script(src='/assets/modernizr.js')
-    // link(href='/assets/application.css' rel='stylesheet')
     = csrf_meta_tags
+    // link(href='/assets/application.css' rel='stylesheet')
     - if content_for? :head
       == yield :head
+    // script(src='/assets/modernizr.js')
   body
+    noscript
+      br
+      div.container
+        p.alert.alert-danger Please enable JavaScript in your browser, then revisit this page.
+      meta(content='10;URL=http://enable-javascript.com/' http-equiv='refresh')
+
     = yield
     = requirejs_include_tag 'main'
     // script(src='/assets/main.js')
