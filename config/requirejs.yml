@@ -3,8 +3,10 @@ modules:
   - name: 'main'
 paths:
   'backbone': 'backbone-min'
+  'bbrsync': 'backbone-react-sync-min'
   'chaplin': 'chaplin-min'
   'jquery': 'jquery-2.1.1-min'
+  'react': 'react-0.10.0'
   'underscore': 'underscore-min'
 preserveLicenseComments: false
 shim:

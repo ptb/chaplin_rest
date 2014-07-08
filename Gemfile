@@ -51,6 +51,8 @@ gem 'rabl', '>= 0.10.1'
 gem 'oj', '>= 2.9.8'
 gem 'js-routes', '>= 0.9.8'
 gem 'execjs', '>= 2.2.1'
+gem 'therubyracer', github: 'ptb/therubyracer'
+gem 'react-rails', github: 'reactjs/react-rails'
 
 group :development do
   gem 'annotate', '>= 2.6.5'

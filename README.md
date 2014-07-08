@@ -12,6 +12,7 @@ Most of the interesting bits are in [app/assets/javascripts](https://github.com/
 - [Backbone.js](http://backbonejs.org/)
 - [Chaplin](http://chaplinjs.org/)
 - [RABL](https://github.com/nesquena/rabl) JSON templates
+- [React](http://facebook.github.io/react/) components
 - [Haml Coffee](https://github.com/netzpirat/haml_coffee_assets) templates
 - [Backbone.Stickit](http://nytimes.github.io/backbone.stickit/)
 
