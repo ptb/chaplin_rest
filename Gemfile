@@ -71,7 +71,7 @@ group :development, :test do
   gem "launchy", ">= 2.4.2"
   gem "selenium-webdriver", ">= 2.40.0"
   gem "poltergeist", ">= 1.5.0"
-  gem "teaspoon", "0.7.9"
+  gem 'teaspoon', github: 'ptb/teaspoon'
 end
 
 group :test do
