@@ -1,8 +1,0 @@
-%td.first_name
-%td.last_name
-%td
-  %a(href="/users/#{@id}") Show
-%td
-  %a(href="/users/#{@id}/edit") Edit
-%td
-  %a.js-destroy(href='#') Destroy

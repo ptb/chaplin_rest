@@ -1,15 +1,9 @@
 define [
-  '_base/base_collection_view'
-  'users/list/user_item_view'
-  'users/list/users_list_template'
-  ], (CollectionView, UserItemView, template) ->
+  '_base/base_react_view'
+  'users/list/users_list_component'
+  ], (ReactView, UsersListComponent) ->
   'use strict'
 
-  class UsersListView extends CollectionView
-    template: template
+  class UsersListView extends ReactView
+    component: UsersListComponent
     container: '#js-main'
-    listSelector: 'tbody'
-
-    itemView: UserItemView
-
-    animationDuration: 0

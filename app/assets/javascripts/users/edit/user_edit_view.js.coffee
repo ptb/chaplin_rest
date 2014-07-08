@@ -1,21 +1,9 @@
 define [
-  'chaplin'
-  'users/_base/user_base_view'
-  'users/edit/user_edit_template'
-  ], (Chaplin, UserView, template) ->
+  '_base/base_react_view'
+  'users/edit/user_edit_component'
+  ], (ReactView, UserEditComponent) ->
   'use strict'
 
-  class UserEditView extends UserView
-    template: template
+  class UserEditView extends ReactView
+    component: UserEditComponent
     container: '#js-main'
-
-    events:
-      'submit form': 'save'
-
-    save: (event) ->
-      event.preventDefault()
-
-      @model.save()
-      @collection.reset()
-
-      Chaplin.utils.redirectTo 'users@list'

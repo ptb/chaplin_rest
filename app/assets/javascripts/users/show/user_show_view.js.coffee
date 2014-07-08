@@ -1,9 +1,9 @@
 define [
-  'users/_base/user_base_view'
-  'users/show/user_show_template'
-  ], (UserView, template) ->
+  '_base/base_react_view'
+  'users/show/user_show_component'
+  ], (ReactView, UserShowComponent) ->
   'use strict'
 
-  class UserShowView extends UserView
-    template: template
+  class UserShowView extends ReactView
+    component: UserShowComponent
     container: '#js-main'
