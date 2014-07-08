@@ -4,9 +4,7 @@ modules:
 paths:
   'backbone': 'backbone-min'
   'chaplin': 'chaplin-min'
-  'exoskeleton': 'exoskeleton-min'
-  'jquery': 'jquery-2.1.0-min'
-  'jquerysrc': 'jquery/src'
+  'jquery': 'jquery-2.1.1-min'
   'underscore': 'underscore-min'
 preserveLicenseComments: false
 shim:
