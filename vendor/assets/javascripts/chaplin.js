@@ -1,5 +1,5 @@
 /*!
- * Chaplin 1.0.0
+ * Chaplin 1.0.1
  *
  * Chaplin may be freely distributed under the MIT license.
  * For all details and documentation:
@@ -168,11 +168,13 @@ utils = loader('chaplin/lib/utils');
 
 mediator = {};
 
-mediator.subscribe = Backbone.Events.on;
+mediator.subscribe = mediator.on = Backbone.Events.on;
 
-mediator.unsubscribe = Backbone.Events.off;
+mediator.subscribeOnce = mediator.once = Backbone.Events.once;
 
-mediator.publish = Backbone.Events.trigger;
+mediator.unsubscribe = mediator.off = Backbone.Events.off;
+
+mediator.publish = mediator.trigger = Backbone.Events.trigger;
 
 mediator._callbacks = null;
 
@@ -223,7 +225,7 @@ mediator.removeHandlers = function(instanceOrNames) {
   }
 };
 
-utils.readonly(mediator, 'subscribe', 'unsubscribe', 'publish', 'setHandler', 'execute', 'removeHandlers');
+utils.readonly(mediator, 'subscribe', 'subscribeOnce', 'unsubscribe', 'publish', 'setHandler', 'execute', 'removeHandlers');
 
 mediator.seal = function() {
   if (support.propertyDescriptors && Object.seal) {
@@ -445,7 +447,11 @@ module.exports = Composer = (function() {
             options: third,
             compose: function() {
               var autoRender, disabledAutoRender;
-              this.item = new second(this.options);
+              if (second.prototype instanceof Backbone.Model || second.prototype instanceof Backbone.Collection) {
+                this.item = new second(null, this.options);
+              } else {
+                this.item = new second(this.options);
+              }
               autoRender = this.item.autoRender;
               disabledAutoRender = autoRender === void 0 || !autoRender;
               if (disabledAutoRender && typeof this.item.render === 'function') {
@@ -767,7 +773,7 @@ module.exports = Model = (function(_super) {
     this.unsubscribeAllEvents();
     this.stopListening();
     this.off();
-    properties = ['collection', 'attributes', 'changed', '_escapedAttributes', '_previousAttributes', '_silent', '_pending', '_callbacks'];
+    properties = ['collection', 'attributes', 'changed', 'defaults', '_escapedAttributes', '_previousAttributes', '_silent', '_pending', '_callbacks'];
     for (_i = 0, _len = properties.length; _i < _len; _i++) {
       prop = properties[_i];
       delete this[prop];
@@ -1265,7 +1271,7 @@ module.exports = View = (function(_super) {
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       classEvents = _ref[_i];
       if (typeof classEvents === 'function') {
-        throw new TypeError('View#delegateEvents: functions are not supported');
+        classEvents = classEvents.call(this);
       }
       this._delegateEvents(classEvents);
     }
@@ -1318,13 +1324,16 @@ module.exports = View = (function(_super) {
     _ref = utils.getAllPropertyVersions(this, 'listen');
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       version = _ref[_i];
+      if (typeof version === 'function') {
+        version = version.call(this);
+      }
       for (key in version) {
         method = version[key];
         if (typeof method !== 'function') {
           method = this[method];
         }
         if (typeof method !== 'function') {
-          throw new Error('View#delegateListeners: ' + ("" + method + " must be function"));
+          throw new Error('View#delegateListeners: ' + ("listener for \"" + key + "\" must be function"));
         }
         _ref1 = key.split(' '), eventName = _ref1[0], target = _ref1[1];
         this.delegateListener(eventName, target, method);
@@ -1676,7 +1685,7 @@ module.exports = CollectionView = (function(_super) {
 
   CollectionView.prototype.$loading = null;
 
-  CollectionView.prototype.itemSelector = void 0;
+  CollectionView.prototype.itemSelector = null;
 
   CollectionView.prototype.filterer = null;
 
@@ -2049,6 +2058,9 @@ module.exports = Route = (function() {
         Use strings with :names and `constraints` option of route');
     }
     this.options = options ? _.extend({}, options) : {};
+    if (this.options.paramsInQS !== false) {
+      this.options.paramsInQS = true;
+    }
     if (this.options.name != null) {
       this.name = this.options.name;
     }
@@ -2091,8 +2103,9 @@ module.exports = Route = (function() {
   };
 
   Route.prototype.reverse = function(params, query) {
-    var name, queryString, raw, url, value, _i, _j, _len, _len1, _ref, _ref1;
+    var name, raw, remainingParams, url, value, _i, _j, _len, _len1, _ref, _ref1;
     params = this.normalizeParams(params);
+    remainingParams = _.extend({}, params);
     if (params === false) {
       return false;
     }
@@ -2102,12 +2115,14 @@ module.exports = Route = (function() {
       name = _ref[_i];
       value = params[name];
       url = url.replace(RegExp("[:*]" + name, "g"), value);
+      delete remainingParams[name];
     }
     _ref1 = this.optionalParams;
     for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
       name = _ref1[_j];
       if (value = params[name]) {
         url = url.replace(RegExp("[:*]" + name, "g"), value);
+        delete remainingParams[name];
       }
     }
     raw = url.replace(optionalRegExp, function(match, portion) {
@@ -2118,15 +2133,16 @@ module.exports = Route = (function() {
       }
     });
     url = processTrailingSlash(raw, this.options.trailing);
-    if (!query) {
-      return url;
+    if (typeof query !== 'object') {
+      query = utils.queryParams.parse(query);
     }
-    if (typeof query === 'object') {
-      queryString = utils.queryParams.stringify(query);
-      return url += queryString ? '?' + queryString : '';
-    } else {
-      return url += (query[0] === '?' ? '' : '?') + query;
+    if (this.options.paramsInQS !== false) {
+      _.extend(query, remainingParams);
     }
+    if (!_.isEmpty(query)) {
+      url += '?' + utils.queryParams.stringify(query);
+    }
+    return url;
   };
 
   Route.prototype.normalizeParams = function(params) {
@@ -2196,7 +2212,7 @@ module.exports = Route = (function() {
       _this.requiredParams.push(param);
       return _this.paramCapturePattern(match);
     });
-    return this.regExp = RegExp("^" + pattern + "(?=\\/?(?=\\?|$))");
+    return this.regExp = RegExp("^" + pattern + "(?=\\/*(?=\\?|$))");
   };
 
   Route.prototype.parseOptionalPortion = function(match, optionalPortion) {
@@ -2390,7 +2406,7 @@ module.exports = Router = (function() {
   };
 
   Router.prototype.route = function(pathDesc, params, options) {
-    var handler, path;
+    var handler, path, pathParams;
     if (typeof pathDesc === 'object') {
       path = pathDesc.url;
       if (!params && pathDesc.params) {
@@ -2421,7 +2437,8 @@ module.exports = Router = (function() {
       _.defaults(options, {
         changeURL: true
       });
-      handler.callback(path || params, options);
+      pathParams = path != null ? path : params;
+      handler.callback(pathParams, options);
       return true;
     } else {
       throw new Error('Router#route: request was not routed');
@@ -2446,7 +2463,7 @@ module.exports = Router = (function() {
         return url;
       }
     }
-    throw new Error('Router#reverse: invalid route specified');
+    throw new Error("Router#reverse: invalid route criteria specified: " + (JSON.stringify(criteria)));
   };
 
   Router.prototype.changeURL = function(controller, params, route, options) {
@@ -2524,7 +2541,7 @@ History = (function(_super) {
   };
 
   History.prototype.start = function(options) {
-    var atRoot, fragment, loc;
+    var atRoot, fragment, loc, _ref, _ref1;
     if (Backbone.History.started) {
       throw new Error('Backbone.history has already been started');
     }
@@ -2537,6 +2554,8 @@ History = (function(_super) {
     this._wantsPushState = Boolean(this.options.pushState);
     this._hasPushState = Boolean(this.options.pushState && this.history && this.history.pushState);
     fragment = this.getFragment();
+    routeStripper = (_ref = this.options.routeStripper) != null ? _ref : routeStripper;
+    rootStripper = (_ref1 = this.options.rootStripper) != null ? _ref1 : rootStripper;
     this.root = ('/' + this.root + '/').replace(rootStripper, '/');
     if (this._hasPushState) {
       Backbone.$(window).on('popstate', this.checkUrl);
@@ -2580,7 +2599,7 @@ History = (function(_super) {
       return false;
     }
     this.fragment = fragment;
-    if (fragment.length === 0 && url !== '/') {
+    if (fragment.length === 0 && url !== '/' && (url !== this.root || this.options.trailing !== true)) {
       url = url.slice(0, -1);
     }
     if (this._hasPushState) {
@@ -2627,6 +2646,16 @@ EventBroker = {
     }
     mediator.unsubscribe(type, handler, this);
     return mediator.subscribe(type, handler, this);
+  },
+  subscribeEventOnce: function(type, handler) {
+    if (typeof type !== 'string') {
+      throw new TypeError('EventBroker#subscribeEventOnce: ' + 'type argument must be a string');
+    }
+    if (typeof handler !== 'function') {
+      throw new TypeError('EventBroker#subscribeEventOnce: ' + 'handler argument must be a function');
+    }
+    mediator.unsubscribe(type, handler, this);
+    return mediator.subscribeOnce(type, handler, this);
   },
   unsubscribeEvent: function(type, handler) {
     if (typeof type !== 'string') {
@@ -2927,9 +2956,9 @@ utils = {
     }
   })(),
   getPrototypeChain: function(object) {
-    var chain, _ref, _ref1, _ref2;
+    var chain, _ref, _ref1, _ref2, _ref3;
     chain = [object.constructor.prototype];
-    while (object = (_ref = (_ref1 = object.constructor) != null ? _ref1.__super__ : void 0) != null ? _ref : (_ref2 = object.constructor) != null ? _ref2.superclass : void 0) {
+    while (object = (_ref = (_ref1 = object.constructor) != null ? (_ref2 = _ref1.superclass) != null ? _ref2.prototype : void 0 : void 0) != null ? _ref : (_ref3 = object.constructor) != null ? _ref3.__super__ : void 0) {
       chain.push(object);
     }
     return chain.reverse();
@@ -2962,7 +2991,7 @@ utils = {
   redirectTo: function(pathDesc, params, options) {
     return loader('chaplin/mediator').execute('router:route', pathDesc, params, options);
   },
-  queryParams: {
+  querystring: {
     stringify: function(queryParams) {
       var arrParam, encodedKey, key, query, stringifyKeyValuePair, value, _i, _len;
       query = '';
@@ -2994,6 +3023,7 @@ utils = {
       if (!queryString) {
         return params;
       }
+      queryString = queryString.slice(queryString.indexOf('?') + 1);
       pairs = queryString.split('&');
       for (_i = 0, _len = pairs.length; _i < _len; _i++) {
         pair = pairs[_i];
@@ -3021,6 +3051,8 @@ utils = {
     }
   }
 };
+
+utils.queryParams = utils.querystring;
 
 if (typeof Object.seal === "function") {
   Object.seal(utils);

@@ -189,7 +189,7 @@
   var ManyToOne = function(model, options) {
     this.required(options, 'inverse', 'collection');
     Association.apply(this, arguments);
-    _.extend(this, _.pick(options, 'collection', 'inverse'));
+    _.extend(this, _.pick(options, 'collection', 'inverse', 'id'));
     model.all()
       .on('associate:' + this.name, this._associate, this)
       .on('dissociate:' + this.name, this._dissociate, this);
@@ -472,11 +472,16 @@
 
       var model = this.find(attrs);
 
+      if (!options) options = {};
+
       // If `attrs` belongs to an existing model, return it.
       if (model && attrs === model.attributes) return model;
 
       // If found by id, modify and return it.
-      if (id && model) return model.set(model.parse(attrs));
+      if (id && model) {
+        model.set(model.parse(attrs), _.extend(options, {silent: false}));
+        return model;
+      }
 
       // Throw if a model already exists with the same id in a superclass.
       var parent = this;
@@ -486,7 +491,6 @@
       }
 
       // Ensure attributes are parsed.
-      if (!options) options = {};
       options.parse = true;
 
       return new this(attrs, options);
