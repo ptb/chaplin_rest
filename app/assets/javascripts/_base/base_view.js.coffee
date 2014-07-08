@@ -1,4 +1,4 @@
-define ['chaplin', 'backbone.stickit'], (Chaplin) ->
+define ['chaplin'], (Chaplin) ->
   'use strict'
 
   class View extends Chaplin.View
@@ -7,7 +7,3 @@ define ['chaplin', 'backbone.stickit'], (Chaplin) ->
 
     getTemplateFunction: ->
       return @template
-
-    render: ->
-      super
-      @stickit()

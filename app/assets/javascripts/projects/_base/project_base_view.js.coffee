@@ -1,6 +1,6 @@
-define ['_base/base_view'], (View) ->
+define ['_base/base_haml_view'], (HamlView) ->
   'use strict'
 
-  class ProjectView extends View
+  class ProjectView extends HamlView
     bindings:
       '.name': 'name'
