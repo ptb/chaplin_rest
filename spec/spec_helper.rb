@@ -7,36 +7,6 @@ require File.expand_path('../../config/environment', __FILE__)
 require 'rspec/rails'
 require 'rspec/autorun'
 
-require 'capybara/rails'
-require 'capybara/rspec'
-require 'capybara/poltergeist'
-
-Capybara.register_driver :rack do |app|
-  Capybara::RackTest::Driver.new(app)
-end
-
-# brew install phantomjs
-Capybara.register_driver :phantomjs do |app|
-  Capybara::Poltergeist::Driver.new(app, inspector: true)
-end
-
-# brew install chromedriver
-Capybara.register_driver :chrome do |app|
-  Capybara::Selenium::Driver.new(app, browser: :chrome)
-end
-
-Capybara.register_driver :firefox do |app|
-  Capybara::Selenium::Driver.new(app, browser: :firefox)
-end
-
-# bit.ly/ZSkgEN   gist.github.com/5550960
-Capybara.register_driver :safari do |app|
-  Capybara::Selenium::Driver.new(app, browser: :safari)
-end
-
-Capybara.default_driver = :rack
-Capybara.javascript_driver = :phantomjs
-
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
@@ -55,23 +25,6 @@ RSpec.configure do |config|
   # config.mock_with :rr
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-
-  # If you're not using ActiveRecord, or you'd prefer not to run each of your
-  # examples within a transaction, remove the following line or assign false
-  # instead of true.
-  config.use_transactional_fixtures = false
-
-  config.before(:suite) do
-    DatabaseCleaner.strategy = :truncation
-  end
-
-  config.before(:each) do
-    DatabaseCleaner.start
-  end
-
-  config.after(:each) do
-    DatabaseCleaner.clean
-  end
 
   # If true, the base class of anonymous controllers will be inferred
   # automatically. This will be the default behavior in future versions of
