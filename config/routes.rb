@@ -1,6 +1,5 @@
 # encoding: UTF-8
-ChaplinRest::Application.routes.draw do
-
+Rails.application.routes.draw do
   scope :api do
     resources :developers
     resources :projects

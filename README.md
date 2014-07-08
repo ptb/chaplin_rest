@@ -19,7 +19,6 @@ Most of the interesting bits are in [app/assets/javascripts](https://github.com/
 
 - [Slim](http://slim-lang.com/) HTML templates
 - [Bootstrap](http://getbootstrap.com/) [Sass](http://sass-lang.com/)
-- [Exoskeleton](http://exosjs.com/)
 - [Modernizr](http://modernizr.com/)
 - [Devise](http://devise.plataformatec.com.br/) for authentication
 - [Several](http://rspec.info/) [test](https://github.com/modeset/teaspoon) [frameworks](http://jnicklas.github.io/capybara/) [and](http://phantomjs.org/) [tools](http://docs.seleniumhq.org/)
