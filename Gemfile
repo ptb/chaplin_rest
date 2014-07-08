@@ -1,4 +1,4 @@
-ruby '2.1.1'
+ruby '2.1.2'
 
 source 'https://rubygems.org'
 
@@ -70,7 +70,7 @@ group :development, :test do
   gem "launchy", ">= 2.4.2"
   gem "selenium-webdriver", ">= 2.40.0"
   gem "poltergeist", ">= 1.5.0"
-  gem "teaspoon", ">= 0.7.9"
+  gem "teaspoon", "0.7.9"
 end
 
 group :test do
